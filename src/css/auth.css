@@ -1,0 +1,25 @@
+.auth-page{display:flex;align-items:center;justify-content:center;height:calc(100vh - 80px)}
+.auth-card{width:360px;padding:20px;display:flex;flex-direction:column;gap:10px}
+.auth-card input, .auth-card textarea, .auth-card select{background:var(--dark-bg);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:var(--font-color)}
+.auth-card h2{margin:0}
+.role-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.btn-toggle {
+  background: #333;
+  border: none;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-toggle.active {
+  background: #b91c1c;
+  box-shadow: 0 0 8px rgba(185, 28, 28, 0.5);
+}

@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root{
+  --primary-red: #9A2E35;
+  --dark-bg: #1C1C1E;
+  --card-bg: #2C2C2E;
+  --font-color: #FFFFFF;
+  --subtle-text: #A1A1A1;
+  --glass: rgba(255,255,255,0.03);
+  --transition: 200ms ease;
+  --max-width: 1200px;
+}
+
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body {
+  margin:0;
+  font-family: 'Poppins', sans-serif;
+  background: var(--dark-bg);
+  color: var(--font-color);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* utility */
+.card{background:var(--card-bg);border-radius:12px;padding:14px}
+.btn{background:var(--primary-red);color:white;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;transition:var(--transition)}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+.btn.small{padding:6px 10px;font-size:14px}
+.muted{color:var(--subtle-text)}
+.small{font-size:13px}
+.empty{color:var(--subtle-text);padding:30px;text-align:center}
+
+/* navbar */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding:14px 20px;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+  position:sticky;
+  top:0;
+  z-index:30;
+}
+.logo{font-weight:700;font-size:20px}
+.logo-accent{color:var(--primary-red)}
+.nav-tabs a{margin-left:16px;color:var(--subtle-text);text-decoration:none}
+.nav-tabs a.active{color:var(--font-color)}
+
+.user-chip{display:flex;gap:10px;align-items:center}
+.avatar{width:36px;height:36px;border-radius:8px;background:var(--glass);display:flex;align-items:center;justify-content:center}
+.avatar-lg{width:64px;height:64px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-size:22px}
+
+/* floating button */
+.floating-btn{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  width:64px;height:64px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background: linear-gradient(180deg,var(--primary-red), #7c2326);
+  color:white;border:none;box-shadow:0px 8px 30px rgba(154,46,53,0.2);
+  font-size:28px;cursor:pointer;z-index:40;
+}
+
+/* layout wrappers */
+.app-root{max-width:var(--max-width);margin:18px auto;padding:0 18px}
+/* ====== Top Navbar ====== */
+
+
+/* When search expands, push down content slightly */
+.navbar-top.expanded {
+  padding-bottom: 3.5rem;
+}
+
+/* Centered logo text */
+.logo-fixed {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #9a2e35;
+  letter-spacing: 0.5px;
+}
+
+.logo-accent {
+  color: white;
+}
+
+/* ====== Fixed Search Icon ====== */
+.search-icon-fixed {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.5rem;
+  background: none;
+  border: none;
+  color: #9a2e35;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 1100;
+}
+
+.search-icon-fixed:hover {
+  transform: scale(1.1);
+}
+
+/* ====== Search Bar ====== */
+.search-bar {
+  position: absolute;
+  top: 3.8rem;
+  left: 0;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.3s ease forwards;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #9a2e35;
+}
+
+/* Smooth slide-down animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

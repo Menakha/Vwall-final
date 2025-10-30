@@ -1,0 +1,75 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #2c2c2e;
+  border-top: 1px solid #3a3a3c;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.6rem 0;
+  z-index: 999;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item {
+  color: #b0b0b0;
+  transition: 0.3s ease;
+}
+
+.nav-item:hover {
+  color: #ffffff;
+  transform: scale(1.15);
+}
+
+/* Floating upload (+) button */
+.upload-btn {
+  position: fixed;
+  bottom: 70px;
+  right: 50%;
+  transform: translateX(50%);
+  background: #9a2e35;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  font-size: 32px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(154, 46, 53, 0.5);
+  transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+  background: #b73b42;
+  transform: translateX(50%) scale(1.1);
+}
+
+/* Optional Search Icon */
+.search-icon {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.5rem;
+  color: #9a2e35;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.search-icon:hover {
+  color: #b73b42;
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .upload-btn {
+    width: 55px;
+    height: 55px;
+    bottom: 80px;
+  }
+
+  .bottom-nav {
+    padding: 0.5rem 0;
+  }
+}
