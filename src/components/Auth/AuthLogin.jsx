@@ -1,4 +1,3 @@
-// src/pages/auth/AuthLogin.jsx
 import React, { useState } from "react";
 import { loginUser } from "../../api";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,19 +15,12 @@ export default function AuthLogin({ onLogin }) {
     setError("");
 
     try {
-      // ✅ Send login data
       const result = await loginUser({ email, password, role });
 
-      // ✅ Check if backend returned a user and token
       if (result.user && result.token) {
-        // Save token & user info in localStorage
         localStorage.setItem("token", result.token);
         localStorage.setItem("role", result.user.role);
         localStorage.setItem("user", JSON.stringify(result.user));
-        console.log("Token after login:", result.token);
-        console.log("✅ Logged in user:", result.user);
-
-        // ✅ Notify parent and redirect
         onLogin(result.user);
         alert("✅ Login successful!");
         navigate("/home");
@@ -43,10 +35,9 @@ export default function AuthLogin({ onLogin }) {
 
   return (
     <div className="auth-page">
-      <div className="auth-card card">
+      <div className="auth-card">
         <h2>Login Portal</h2>
 
-        {/* Role Toggle */}
         <div className="role-toggle">
           <button
             type="button"
@@ -64,9 +55,9 @@ export default function AuthLogin({ onLogin }) {
           </button>
         </div>
 
-        {/* Login Form */}
         <form className="auth-section" onSubmit={handleSubmit}>
           <input
+            className="auth-input"
             type="email"
             placeholder="Enter Email"
             value={email}
@@ -75,6 +66,7 @@ export default function AuthLogin({ onLogin }) {
           />
 
           <input
+            className="auth-input"
             type="password"
             placeholder="Enter Password"
             value={password}
@@ -82,24 +74,18 @@ export default function AuthLogin({ onLogin }) {
             required
           />
 
-          <button className="btn" type="submit">
+          <button className="auth-btn" type="submit">
             Login
           </button>
 
-          {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
+          {error && <p className="auth-error">{error}</p>}
         </form>
 
-        {/* Register Link */}
-        <div style={{ textAlign: "center", marginTop: "10px" }}>
-          <p className="muted small">
-            New user?{" "}
-            <Link
-              to="/register"
-              style={{ color: "#007bff", textDecoration: "none" }}
-            >
-              Register here
-            </Link>
-          </p>
+        <div className="auth-footer">
+          New user?{" "}
+          <Link to="/register" className="auth-link">
+            Register here
+          </Link>
         </div>
       </div>
     </div>

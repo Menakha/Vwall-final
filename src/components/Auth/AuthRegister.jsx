@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { registerUser } from "../../api";
-import { useNavigate, Link } from "react-router-dom"; // ✅ added Link
+import { useNavigate, Link } from "react-router-dom";
 import "../../css/auth.css";
 
 export default function AuthRegister() {
@@ -13,9 +13,10 @@ export default function AuthRegister() {
     year: "",
     department: "",
     className: "",
+    phone: "",
   });
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // ✅ hook
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +25,7 @@ export default function AuthRegister() {
     const result = await registerUser({ ...form, role });
     if (result.user) {
       alert("✅ Registered successfully!");
-      navigate("/home"); // ✅ redirect to login page
+      navigate("/home");
     } else {
       setMessage(result.message || "Registration failed!");
     }
@@ -32,7 +33,7 @@ export default function AuthRegister() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card card">
+      <div className="auth-card">
         <h2>Register Portal</h2>
 
         <div className="role-toggle">
@@ -52,6 +53,7 @@ export default function AuthRegister() {
 
         <form className="auth-section" onSubmit={handleSubmit}>
           <input
+            className="auth-input"
             required
             placeholder="Full Name"
             value={form.name}
@@ -59,6 +61,7 @@ export default function AuthRegister() {
           />
 
           <input
+            className="auth-input"
             required
             type="email"
             placeholder="Email"
@@ -69,16 +72,19 @@ export default function AuthRegister() {
           {role === "student" && (
             <>
               <input
+                className="auth-input"
                 placeholder="Register No"
                 value={form.regno}
                 onChange={(e) => setForm({ ...form, regno: e.target.value })}
               />
               <input
+                className="auth-input"
                 placeholder="Year"
                 value={form.year}
                 onChange={(e) => setForm({ ...form, year: e.target.value })}
               />
               <input
+                className="auth-input"
                 placeholder="Department"
                 value={form.department}
                 onChange={(e) =>
@@ -86,19 +92,25 @@ export default function AuthRegister() {
                 }
               />
               <input
+                className="auth-input"
                 placeholder="Class"
                 value={form.className}
-                onChange={(e) => setForm({ ...form, className: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, className: e.target.value })
+                }
               />
             </>
           )}
 
           <input
+            className="auth-input"
             placeholder="Phone"
             value={form.phone}
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
           />
+
           <input
+            className="auth-input"
             required
             type="password"
             placeholder="Password"
@@ -106,20 +118,19 @@ export default function AuthRegister() {
             onChange={(e) => setForm({ ...form, password: e.target.value })}
           />
 
-          <button className="btn">Register</button>
+          <button className="auth-btn" type="submit">
+            Register
+          </button>
         </form>
 
-        {message && (
-          <p style={{ color: "green", textAlign: "center" }}>{message}</p>
-        )}
+        {message && <p className="auth-success">{message}</p>}
 
-        {/* ✅ Add this line below */}
-        <p style={{ textAlign: "center", marginTop: "15px" }}>
+        <div className="auth-footer">
           Already have an account?{" "}
-          <Link to="/login" style={{ color: "#007bff", textDecoration: "none" }}>
+          <Link to="/" className="auth-link">
             Login here
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

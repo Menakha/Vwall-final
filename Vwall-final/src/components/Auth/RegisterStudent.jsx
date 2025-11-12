@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../../css/auth.css";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../api"; // ✅ import from api.js
+import "../../css/auth.css";  
 
 export default function RegisterStudent() {
   const [form, setForm] = useState({
