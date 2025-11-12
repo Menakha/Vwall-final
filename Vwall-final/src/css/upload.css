@@ -1,0 +1,5 @@
+.upload-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:80}
+.upload-modal{width:95%;max-width:520px;padding:18px;border-radius:12px}
+.upload-form{display:flex;flex-direction:column;gap:10px}
+.upload-form input[type=file]{background:transparent;color:var(--font-color)}
+.upload-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:10px}

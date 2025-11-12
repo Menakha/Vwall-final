@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Poster 1",
+    "description": "Uploaded image file.",
+    "filename": "1760560621236.png",
+    "filepath": "/uploads/1760560621236.png",
+    "uploadedBy": { "$oid": "64c1234567ab89ef01234567" },
+    "createdAt": { "$date": "2024-10-30T00:00:00Z" }
+  },
+  {
+    "title": "Poster 2",
+    "description": "Uploaded image file.",
+    "filename": "1760560911537.png",
+    "filepath": "/uploads/1760560911537.png",
+    "uploadedBy": { "$oid": "64c1234567ab89ef01234567" },
+    "createdAt": { "$date": "2024-10-30T00:00:00Z" }
+  },
+  {
+    "title": "Recruitment Poster 1",
+    "description": "Recruitment poster for event.",
+    "filename": "1760587201818-recuriment poster.jpg",
+    "filepath": "/uploads/1760587201818-recuriment poster.jpg",
+    "uploadedBy": { "$oid": "64c1234567ab89ef01234567" },
+    "createdAt": { "$date": "2024-10-30T00:00:00Z" }
+  }
+]
