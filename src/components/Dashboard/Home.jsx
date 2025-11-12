@@ -25,13 +25,14 @@ export default function Home({ posts = [], onTogglePin, user, onDelete, onUpload
         // Map backend data to UI-friendly post structure
         const fetched = res.data.map((file) => ({
           id: file._id,
-          title: file.filename,
-          description: "Uploaded file",
-          url: `http://localhost:5000/${file.filepath.replace(/\\/g, "/")}`,
-          category: "Circulars", // default category (could be user-selected later)
-          date: new Date(file.createdAt).toLocaleString(),
+          title: file.title || file.filename,
+          description: file.description || "",
+          category: file.category || "Circulars",
+          filepath: file.filepath, // ✅ exact DB value
+          url: `http://localhost:5000${file.filepath.replace(/\\/g, "/")}`,
+          date: file.createdAt,
           fileType: file.filename.endsWith(".pdf") ? "pdf" : "image",
-          pinnedBy: [],
+          
         }));
 
         setServerPosts(fetched);
@@ -60,6 +61,21 @@ export default function Home({ posts = [], onTogglePin, user, onDelete, onUpload
     if (onUpload) onUpload(newPost);
     setUploadOpen(false);
   };
+  const handleTogglePin = (postId) => {
+  const pinsKey = "vwall_pins_v1_" + (user?.email || "guest");
+  const existingPins = JSON.parse(localStorage.getItem(pinsKey) || "[]");
+
+  let updatedPins;
+  if (existingPins.includes(postId)) {
+    updatedPins = existingPins.filter((id) => id !== postId); // Unpin
+  } else {
+    updatedPins = [...existingPins, postId]; // Pin
+  }
+
+  localStorage.setItem(pinsKey, JSON.stringify(updatedPins));
+  window.dispatchEvent(new Event("storage")); // Notify pinned page
+};
+
 
   return (
     <div className="home-page">

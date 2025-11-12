@@ -1,35 +1,115 @@
-import React, { useState } from "react";
+import React from "react";
 import "../../css/home.css";
 
 export default function FullViewModal({ post, onClose }) {
-  const [scale, setScale] = useState(1);
-
-  const zoomIn = () => setScale((s) => Math.min(2.5, s + 0.25));
-  const zoomOut = () => setScale((s) => Math.max(0.5, s - 0.25));
-  const reset = () => setScale(1);
-
   return (
-    <div className="fullview-overlay" onClick={onClose}>
-      <div className="fullview-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="fv-header">
-          <h3>{post.title}</h3>
-          <div className="fv-controls">
-            <button onClick={zoomOut}>−</button>
-            <button onClick={reset}>Reset</button>
-            <button onClick={zoomIn}>+</button>
-            <button className="close" onClick={onClose}>Close</button>
-          </div>
-        </div>
+    <div
+      className="fullview-overlay"
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: "rgba(0, 0, 0, 0.85)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: "20px",
+      }}
+    >
+      <div
+        className="fullview-modal"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "#1c1c1c",
+          borderRadius: "12px",
+          padding: "20px",
+          maxWidth: "90%",
+          maxHeight: "90%",
+          overflowY: "auto",
+          color: "#fff",
+          position: "relative",
+        }}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          style={{
+            position: "absolute",
+            top: "10px",
+            right: "15px",
+            background: "transparent",
+            border: "none",
+            color: "#ff6b6b",
+            fontSize: "20px",
+            cursor: "pointer",
+          }}
+        >
+          ✖
+        </button>
 
-        <div className="fv-body">
-          <img src={post.url} alt={post.title} style={{ transform: `scale(${scale})` }} />
-          <div className="fv-desc">
-            <div className="file-meta">
-              <strong>{post.fileName || "file"}</strong> • {new Date(post.date).toLocaleString()}
-            </div>
-            <p>{post.description}</p>
-          </div>
-        </div>
+        {/* Title */}
+        <h2
+          style={{
+            color: "#9A2E35",
+            fontSize: "20px",
+            textAlign: "center",
+            marginBottom: "10px",
+          }}
+        >
+          {post.title}
+        </h2>
+
+        {/* Image or PDF */}
+        {post.fileType === "pdf" ? (
+          <embed
+            src={post.url}
+            type="application/pdf"
+            width="100%"
+            height="400px"
+            style={{ borderRadius: "8px", marginBottom: "10px" }}
+          />
+        ) : (
+          <img
+            src={post.url}
+            alt={post.title}
+            style={{
+              width: "100%",
+              borderRadius: "10px",
+              objectFit: "contain",
+              maxHeight: "400px",
+              marginBottom: "10px",
+            }}
+          />
+        )}
+
+        {/* Description */}
+        <p
+          style={{
+            fontSize: "15px",
+            color: "#ccc",
+            lineHeight: "1.6",
+            textAlign: "justify",
+            marginTop: "10px",
+          }}
+        >
+          {post.description || "No description provided."}
+        </p>
+
+        {/* Date */}
+        <p
+          style={{
+            fontSize: "13px",
+            color: "#888",
+            textAlign: "right",
+            marginTop: "15px",
+          }}
+        >
+          {new Date(post.date || post.createdAt).toLocaleString()}
+        </p>
       </div>
     </div>
   );

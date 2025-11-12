@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import "../../css/home.css";
 import FullViewModal from "./FullViewModal";
+import {
+  Pin,
+  PinOff,
+  Share2,
+  Download,
+  Trash2,
+} from "lucide-react"; // ✅ Lucide icons
+
+
 
 export default function PostCard({ post, onTogglePin, user, onDelete }) {
   const [hovered, setHovered] = useState(false);
@@ -74,28 +83,39 @@ export default function PostCard({ post, onTogglePin, user, onDelete }) {
             )}
           </p>
         </div>
-
+          {/* 🔹 Lucide Icon Buttons */}
         <div className={`card-icons ${hovered ? "visible" : ""}`}>
           <button
             className={`icon-btn ${isPinned ? "pinned" : ""}`}
             onClick={() => onTogglePin(post.id)}
-            title={isPinned ? "Unpin" : "Pin"}
+            title={isPinned ? "Unpin Post" : "Pin Post"}
           >
-            📌
+            {isPinned ? <PinOff size={18} /> : <Pin size={18} />}
           </button>
-          <button className="icon-btn" onClick={handleDownload} title="Download">
-            ⬇️
+
+          <button
+            className="icon-btn"
+            onClick={handleDownload}
+            title="Download File"
+          >
+            <Download size={18} />
           </button>
-          <button className="icon-btn" onClick={handleShare} title="Share">
-            🔗
+
+          <button
+            className="icon-btn"
+            onClick={handleShare}
+            title="Share Link"
+          >
+            <Share2 size={18} />
           </button>
+
           {user?.role === "admin" && (
             <button
               className="icon-btn danger"
               onClick={() => onDelete(post.id)}
-              title="Delete"
+              title="Delete Post"
             >
-              🗑️
+              <Trash2 size={18} />
             </button>
           )}
         </div>
@@ -105,3 +125,5 @@ export default function PostCard({ post, onTogglePin, user, onDelete }) {
     </>
   );
 }
+
+        

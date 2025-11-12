@@ -6,19 +6,15 @@ import Home from "./components/Dashboard/Home";
 import Pinned from "./components/Dashboard/Pinned";
 import Profile from "./components/Dashboard/Profile";
 import UploadModal from "./components/Dashboard/UploadModal";
-import AdminLogin from "./components/Auth/AdminLogin";
-import StudentLogin from "./components/Auth/StudentLogin";
-import RegisterStudent from "./components/Auth/RegisterStudent";
-import RegisterAdmin from "./components/Auth/RegisterAdmin";
-import AuthSelector from "./components/Auth/AuthSelector";
-import RegisterSelector from "./components/Auth/RegisterSelector";
+import AuthLogin from "./components/Auth/AuthLogin"; 
+import AuthRegister from "./components/Auth/AuthRegister";
 import "./css/theme.css";
 import "./css/bottomnav.css";
 import { HomeIcon, BookmarkIcon, UserIcon } from "lucide-react";
 
 const STORAGE_KEYS = {
   POSTS: "vwall_posts_v1",
-  USER: "vwall_user_v1",
+  USER: "user",
   PINS_PREFIX: "vwall_pins_v1_",
 };
 
@@ -76,15 +72,22 @@ function App() {
   }, [user]);
 
   // ✅ Handle login
-  const handleLogin = (userObj) => {
-    console.log("✅ Logged in:", userObj);
-    setUser(userObj);
-    const pinsKey = STORAGE_KEYS.PINS_PREFIX + userObj.email;
-    if (!localStorage.getItem(pinsKey)) {
-      localStorage.setItem(pinsKey, JSON.stringify([]));
-    }
+ const handleLogin = (userObj) => {
+  setUser(userObj);
+  const pinsKey = STORAGE_KEYS.PINS_PREFIX + userObj.email;
+  if (!localStorage.getItem(pinsKey)) {
+    localStorage.setItem(pinsKey, JSON.stringify([]));
+  }
+};
+
+// ✅ Redirect to home only *after* user state updates
+useEffect(() => {
+  if (user && (window.location.pathname === "/" || window.location.pathname === "/register")) {
     navigate("/home");
-  };
+  }
+}, [user, navigate]);
+
+
 
   // ✅ Handle logout
   const handleLogout = () => {
@@ -165,17 +168,16 @@ function App() {
   // ✅ Default login/register routes (if not logged in)
   if (!user) {
     return (
-      <Routes>
-        <Route path="/" element={<AuthSelector onLogin={handleLogin} />} />
-        <Route path="/register" element={<RegisterSelector onRegister={handleLogin} />} />
-        <Route path="/login/admin" element={<AdminLogin onLogin={handleLogin} />} />
-        <Route path="/login/student" element={<StudentLogin onLogin={handleLogin} />} />
-        <Route path="/register/admin" element={<RegisterAdmin onRegister={handleLogin} />} />
-        <Route path="/register/student" element={<RegisterStudent onRegister={handleLogin} />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+   <Routes>
+  <Route path="/" element={<AuthLogin onLogin={handleLogin} />} />
+  <Route path="/register" element={<AuthRegister />} />
+  <Route path="*" element={<Navigate to="/" />} />
+</Routes>
+
+
     );
   }
+
 
   // ✅ Dashboard view (after login)
   return (

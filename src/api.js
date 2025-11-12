@@ -1,32 +1,30 @@
 import axios from "axios";
 
-// ✅ Create axios instance
+// ✅ Backend base URL
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/auth", // update this if backend URL changes
+  baseURL: "http://localhost:5000/api/auth",
 });
 
 // 🔹 Login user (student/admin)
 export const loginUser = async (data) => {
   try {
     const res = await API.post("/login", data);
+    const { user, token } = res.data;
 
-    const user = res.data.user;
-    if (user) {
-      // ✅ Store user info in localStorage for session management
+    if (user && token) {
+      // ✅ Store both user and token correctly
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("role", user.role);
+      localStorage.setItem("token", token);
 
-      // ✅ Redirect based on role
-      if (user.role === "admin") {
-        window.location.href = "/home";
-      } else {
-        window.location.href = "/home";
-      }
+      console.log("✅ Token stored:", token);
+    } else {
+      console.error("⚠️ No token or user received from backend.");
     }
 
     return res.data;
   } catch (err) {
-    console.error("Login error:", err);
+    console.error("❌ Login error:", err);
     return { message: err.response?.data?.message || "Server error during login" };
   }
 };
@@ -35,30 +33,21 @@ export const loginUser = async (data) => {
 export const registerUser = async (data) => {
   try {
     const res = await API.post("/register", data);
+    const { user, token } = res.data;
 
-    // ✅ Auto-login after registration (optional)
-    if (res.data.user) {
-      const user = res.data.user;
+    if (user && token) {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("role", user.role);
+      localStorage.setItem("token", token);
 
-      // ✅ Redirect based on role
-      if (user.role === "admin") {
-        window.location.href = "/home";
-      } else {
-        window.location.href = "/home";
-      }
+      console.log("✅ Registered and token stored:", token);
     }
 
     return res.data;
   } catch (err) {
-    console.error("Registration error:", err);
+    console.error("❌ Registration error:", err);
     return { message: err.response?.data?.message || "Registration failed" };
   }
 };
 
-// ✅ Optional default export (if you want to import all functions together)
-export default {
-  loginUser,
-  registerUser,
-};
+export default { loginUser, registerUser };

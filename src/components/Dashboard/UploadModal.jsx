@@ -1,54 +1,60 @@
 import React, { useState } from "react";
-import axios from "axios"; // ✅ Use axios directly (or API instance if configured)
+import axios from "axios";
 
 export default function UploadModal({ isOpen, onClose, onUpload }) {
   const [fileObj, setFileObj] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Circulars");
+  const [expiryDate, setExpiryDate] = useState("");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
 
-  // ✅ Handle file selection
   const handleFile = (e) => {
     const f = e.target.files[0];
     if (!f) return;
     setFileObj(f);
   };
 
-  // ✅ Handle file upload
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!fileObj) return alert("Please choose a file first.");
+
+    const token = localStorage.getItem("token");
+    if (!token) return alert("⚠️ No token found. Please log in again.");
 
     const formData = new FormData();
     formData.append("file", fileObj);
     formData.append("title", title);
     formData.append("description", description);
     formData.append("category", category);
+    if (expiryDate) formData.append("expiryDate", expiryDate); // ✅ Optional expiry date
 
     try {
       setUploading(true);
       setError("");
 
-      // ✅ Upload file to backend
       const res = await axios.post("http://localhost:5000/api/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       alert("✅ File uploaded successfully!");
       if (onUpload) onUpload(res.data);
 
-      // ✅ Reset form
+      // Reset form
       setTitle("");
       setDescription("");
       setFileObj(null);
       setCategory("Circulars");
+      setExpiryDate("");
       onClose();
     } catch (err) {
-      console.error("Upload error:", err);
+      console.error("❌ Upload error:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Upload failed. Try again.");
     } finally {
       setUploading(false);
@@ -62,99 +68,119 @@ export default function UploadModal({ isOpen, onClose, onUpload }) {
       left: 0,
       width: "100%",
       height: "100%",
-      background: "rgba(0,0,0,0.5)",
+      background: "rgba(0,0,0,0.85)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       zIndex: 1000,
+      padding: "20px",
     },
     modal: {
-      background: "#fff",
+      background: "#121212",
       borderRadius: "16px",
       padding: "30px",
-      width: "90%",
-      maxWidth: "420px",
-      boxShadow: "0 8px 30px rgba(0,0,0,0.2)",
+      width: "100%",
+      maxWidth: "480px",
+      boxShadow: "0 0 25px rgba(255,255,255,0.1)",
+      color: "#f2f2f2",
+      display: "flex",
+      flexDirection: "column",
+      maxHeight: "90vh",
+      overflowY: "auto",
     },
     title: {
       fontSize: "22px",
       fontWeight: "600",
       marginBottom: "20px",
       textAlign: "center",
-      color: "#7c2326",
+      color: "#9a2e35",
+      textShadow: "0 0 8px ",
     },
     input: {
       padding: "10px",
       borderRadius: "8px",
-      border: "1px solid #ccc",
+      border: "1px solid #444",
+      background: "#1e1e1e",
+      color: "#fff",
       fontSize: "14px",
       outline: "none",
       width: "100%",
-      marginBottom: "10px",
+      marginBottom: "12px",
     },
     textarea: {
       padding: "10px",
       borderRadius: "8px",
-      border: "1px solid #ccc",
+      border: "1px solid #444",
+      background: "#1e1e1e",
+      color: "#fff",
       fontSize: "14px",
       minHeight: "80px",
       resize: "none",
       width: "100%",
-      marginBottom: "10px",
+      marginBottom: "12px",
     },
     select: {
       padding: "10px",
       borderRadius: "8px",
-      border: "1px solid #ccc",
+      border: "1px solid #444",
+      background: "#1e1e1e",
+      color: "#fff",
       fontSize: "14px",
       width: "100%",
-      marginBottom: "10px",
+      marginBottom: "12px",
     },
     actions: {
       display: "flex",
       justifyContent: "space-between",
-      marginTop: "15px",
+      marginTop: "20px",
     },
     btn: {
-      padding: "10px 18px",
+      flex: 1,
+      margin: "0 5px",
+      padding: "12px 18px",
       borderRadius: "8px",
       border: "none",
       cursor: "pointer",
       fontWeight: "600",
+      transition: "0.3s",
     },
     uploadBtn: {
-      background: "linear-gradient(180deg, #b92b2b, #7c2326)",
+      background: "linear-gradient(135deg, #9a2e35)",
       color: "white",
+      boxShadow: "0 0 10px #9a2e35",
     },
     cancelBtn: {
-      background: "#eee",
-      color: "#333",
+      background: "#333",
+      color: "#eee",
+      border: "1px solid #555",
     },
     error: {
-      color: "red",
+      color: "#ff6b6b",
       fontSize: "13px",
       textAlign: "center",
     },
     fileInfo: {
       fontSize: "13px",
-      color: "#333",
-      marginTop: "-5px",
+      color: "#ccc",
       marginBottom: "8px",
     },
     preview: {
       marginTop: "10px",
       textAlign: "center",
+      border: "1px solid #333",
+      borderRadius: "10px",
+      padding: "10px",
+      background: "#1c1c1c",
     },
   };
 
   return (
     <div style={styles.overlay}>
       <div style={styles.modal}>
-        <h3 style={styles.title}>Upload Post</h3>
+        <h3 style={styles.title}>Upload File</h3>
         {error && <p style={styles.error}>{error}</p>}
 
         <form onSubmit={handleSubmit}>
-          {/* File input */}
           <input
             type="file"
             id="uploadFile"
@@ -164,32 +190,30 @@ export default function UploadModal({ isOpen, onClose, onUpload }) {
             style={styles.input}
           />
 
-          {/* ✅ Show selected file name */}
           {fileObj && (
-            <p style={styles.fileInfo}>
-              <strong>Selected:</strong> {fileObj.name} (
-              {Math.round(fileObj.size / 1024)} KB)
-            </p>
-          )}
+            <>
+              <p style={styles.fileInfo}>
+                <strong>Selected:</strong> {fileObj.name} (
+                {Math.round(fileObj.size / 1024)} KB)
+              </p>
 
-          {/* ✅ Preview selected file */}
-          {fileObj && (
-            <div style={styles.preview}>
-              {fileObj.type.startsWith("image/") ? (
-                <img
-                  src={URL.createObjectURL(fileObj)}
-                  alt="Preview"
-                  style={{ maxWidth: "100%", borderRadius: "10px" }}
-                />
-              ) : fileObj.type === "application/pdf" ? (
-                <embed
-                  src={URL.createObjectURL(fileObj)}
-                  width="100%"
-                  height="200px"
-                  type="application/pdf"
-                />
-              ) : null}
-            </div>
+              <div style={styles.preview}>
+                {fileObj.type.startsWith("image/") ? (
+                  <img
+                    src={URL.createObjectURL(fileObj)}
+                    alt="Preview"
+                    style={{ maxWidth: "100%", borderRadius: "8px" }}
+                  />
+                ) : (
+                  <embed
+                    src={URL.createObjectURL(fileObj)}
+                    width="100%"
+                    height="200px"
+                    type="application/pdf"
+                  />
+                )}
+              </div>
+            </>
           )}
 
           <input
@@ -199,6 +223,7 @@ export default function UploadModal({ isOpen, onClose, onUpload }) {
             onChange={(e) => setTitle(e.target.value)}
             style={styles.input}
           />
+
           <textarea
             required
             placeholder="Description"
@@ -206,6 +231,7 @@ export default function UploadModal({ isOpen, onClose, onUpload }) {
             onChange={(e) => setDescription(e.target.value)}
             style={styles.textarea}
           />
+
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -215,6 +241,16 @@ export default function UploadModal({ isOpen, onClose, onUpload }) {
             <option value="Events">Events</option>
             <option value="UT">UT</option>
           </select>
+
+          {/* ✅ Optional expiry date */}
+          
+          <input
+            type="date"
+            value={expiryDate}
+            onChange={(e) => setExpiryDate(e.target.value)}
+            style={styles.input}
+            placeholder="End Date(optional)"
+          />
 
           <div style={styles.actions}>
             <button
@@ -231,6 +267,7 @@ export default function UploadModal({ isOpen, onClose, onUpload }) {
                 setTitle("");
                 setDescription("");
                 setFileObj(null);
+                setExpiryDate("");
                 onClose();
               }}
             >
